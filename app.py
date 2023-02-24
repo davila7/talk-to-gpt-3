@@ -6,7 +6,7 @@ import json
 
 
 # openai
-openai.api_key = "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"
+openai.api_key = ""
 model = whisper.load_model('base')
 engine = pyttsx3.init()
 
