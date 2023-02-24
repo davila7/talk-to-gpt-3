@@ -1,19 +1,26 @@
-import streamlit as st
 import openai
 import pyttsx3
 import speech_recognition as sr
+import whisper
+import json 
 
 
-openai.api_key = ""
-
+# openai
+openai.api_key = "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"
+model = whisper.load_model('base')
 engine = pyttsx3.init()
+
+# set engine
+# MX =  com.apple.speech.synthesis.voice.juan
+# US = com.apple.speech.synthesis.voice.Alex
+engine.setProperty('voice', 'com.apple.speech.synthesis.voice.Alex')
 
 r = sr.Recognizer()
 mic = sr.Microphone(device_index=2)
 
 
 conversation = ""
-user_name = "Dani"
+user_name = "Ayla"
 bot_name = "Bot"
 
 while True:
@@ -21,10 +28,13 @@ while True:
         print("\nlistening...")
         r.adjust_for_ambient_noise(source, duration=0.2)
         audio = r.listen(source)
+        with open('output.wav', 'wb') as f:
+            f.write(audio.get_wav_data())
     print("no longer listening.\n")
     
     try:
-        user_input = r.recognize_google(audio)
+        output = model.transcribe('output.wav', fp16=False)
+        user_input = output['text']
         print("user input : " + user_input)
     except Exception as e :
         print(e)
